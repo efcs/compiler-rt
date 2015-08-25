@@ -32,8 +32,6 @@
 #include "sanitizer_common/sanitizer_linux.h"
 #include "sanitizer_common/sanitizer_tls_get_addr.h"
 
-#include <wchar.h>
-
 #include <stdarg.h>
 // ACHTUNG! No other system header includes in this file.
 // Ideally, we should get rid of stdarg.h as well.
@@ -562,7 +560,7 @@ INTERCEPTOR(SIZE_T, __wcsftime_l, wchar_t *s, SIZE_T max, const wchar_t *format,
 #define MSAN_MAYBE_INTERCEPT___WCSFTIME_L
 #endif
 
-INTERCEPTOR(int, wcrtomb, char* dest, wchar_t b, mbstate_t* st) {
+INTERCEPTOR(int, wcrtomb, char* dest, wchar_t b, void* st) {
   ENSURE_MSAN_INITED();
   int res = REAL(wcrtomb)(dest, b, st);
   if (res != 1 && dest) __msan_unpoison(dest, res);
