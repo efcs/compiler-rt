@@ -1958,7 +1958,7 @@ TEST(MemorySanitizer, wcrtomb) {
   mbstate_t mbs;
   memset(&mbs, 0, sizeof(mbs));
   size_t res = wcrtomb(buff, x, &mbs);
-  EXPECT_EQ(res, 1);
+  EXPECT_EQ(res, (size_t)1);
   EXPECT_EQ(buff[0], 'a');
 }
 
