@@ -2746,7 +2746,7 @@ INTERCEPTOR(SIZE_T, wcrtombs, char *dest, wchar_t src, void *ps) {
   return res;
 }
 
-#define INIT_WCRTOMBS COMMON_INTERCEPT_FUNCTION(wcsnrtombs);
+#define INIT_WCRTOMBS COMMON_INTERCEPT_FUNCTION(wcrtombs);
 #else
 #define INIT_WCRTOMBS
 #endif
@@ -5182,6 +5182,7 @@ static void InitializeCommonInterceptors() {
   INIT_MBSNRTOWCS;
   INIT_WCSTOMBS;
   INIT_WCSNRTOMBS;
+  INIT_WCRTOMBS;
   INIT_TCGETATTR;
   INIT_REALPATH;
   INIT_CANONICALIZE_FILE_NAME;
