@@ -563,7 +563,7 @@ INTERCEPTOR(SIZE_T, __wcsftime_l, wchar_t *s, SIZE_T max, const wchar_t *format,
 INTERCEPTOR(int, wcrtomb, char* dest, wchar_t b, mbstate_t* st) {
   ENSURE_MSAN_INITED();
   int res = REAL(wcrtomb)(dest, b, st);
-  if (rest != 1 && dest) __msan_unpoison(dest, res);
+  if (res != 1 && dest) __msan_unpoison(dest, res);
   return res;
 }
 
