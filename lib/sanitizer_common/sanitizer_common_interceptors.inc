@@ -2729,6 +2729,28 @@ INTERCEPTOR(SIZE_T, wcsnrtombs, char *dest, const wchar_t **src, SIZE_T nms,
 #define INIT_WCSNRTOMBS
 #endif
 
+
+#if SANITIZER_INTERCEPT_WCRTOMBS
+INTERCEPTOR(SIZE_T, wcrtombs, char *dest, wchar_t src, void *ps) {
+  void *ctx;
+  COMMON_INTERCEPTOR_ENTER(ctx, wcrtombs, dest, src, ps);
+  if (ps) COMMON_INTERCEPTOR_READ_RANGE(ctx, ps, mbstate_t_sz);
+  // FIXME: under ASan the call below may write to freed memory and corrupt
+  // its metadata. See
+  // https://code.google.com/p/address-sanitizer/issues/detail?id=321.
+  SIZE_T res = REAL(wcrtombs)(dest, src, ps);
+  if (res != (SIZE_T) - 1 && dest) {
+    SIZE_T write_cnt = res + !*src;
+    COMMON_INTERCEPTOR_WRITE_RANGE(ctx, dest, write_cnt);
+  }
+  return res;
+}
+
+#define INIT_WCRTOMBS COMMON_INTERCEPT_FUNCTION(wcsnrtombs);
+#else
+#define INIT_WCRTOMBS
+#endif
+
 #if SANITIZER_INTERCEPT_TCGETATTR
 INTERCEPTOR(int, tcgetattr, int fd, void *termios_p) {
   void *ctx;
