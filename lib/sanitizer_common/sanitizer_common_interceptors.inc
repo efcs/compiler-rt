@@ -2740,7 +2740,7 @@ INTERCEPTOR(SIZE_T, wcrtombs, char *dest, wchar_t src, void *ps) {
   // https://code.google.com/p/address-sanitizer/issues/detail?id=321.
   SIZE_T res = REAL(wcrtombs)(dest, src, ps);
   if (res != (SIZE_T) - 1 && dest) {
-    SIZE_T write_cnt = res + !*src;
+    SIZE_T write_cnt = res;
     COMMON_INTERCEPTOR_WRITE_RANGE(ctx, dest, write_cnt);
   }
   return res;
