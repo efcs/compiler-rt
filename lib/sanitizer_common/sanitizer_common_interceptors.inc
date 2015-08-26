@@ -2717,7 +2717,7 @@ INTERCEPTOR(SIZE_T, wcsnrtombs, char *dest, const wchar_t **src, SIZE_T nms,
   // its metadata. See
   // https://code.google.com/p/address-sanitizer/issues/detail?id=321.
   SIZE_T res = REAL(wcsnrtombs)(dest, src, nms, len, ps);
-  if (res != (SIZE_T) - 1 && dest && src) {
+  if (res != ((SIZE_T)-1) && dest && src) {
     SIZE_T write_cnt = res + !*src;
     COMMON_INTERCEPTOR_WRITE_RANGE(ctx, dest, write_cnt);
   }
@@ -2739,7 +2739,7 @@ INTERCEPTOR(SIZE_T, wcrtomb, char *dest, wchar_t src, void *ps) {
   // its metadata. See
   // https://code.google.com/p/address-sanitizer/issues/detail?id=321.
   SIZE_T res = REAL(wcrtomb)(dest, src, ps);
-  if (res != (SIZE_T) - 1 && dest) {
+  if (res != ((SIZE_T)-1) && dest) {
     SIZE_T write_cnt = res;
     COMMON_INTERCEPTOR_WRITE_RANGE(ctx, dest, write_cnt);
   }
